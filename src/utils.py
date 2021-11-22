@@ -1,13 +1,16 @@
+"""
+Utility functions for Redis Proxy
+"""
+
 import argparse
 
 
 def parse_args():
-            # Create the parser
-    parser = argparse.ArgumentParser()  # Add an argument
+    """ Read and parse CLI arguments """
+    parser = argparse.ArgumentParser()
     parser.add_argument('-c',
-                        # '--capacity',
                         dest="capacity",
-                        default=100,
+                        default=1000,
                         type=int,
                         help="Cache capacity (number of keys)")
     parser.add_argument('-e',
