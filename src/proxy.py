@@ -31,7 +31,7 @@ class GetHandler(BaseHTTPRequestHandler):
         super(GetHandler, self).__init__(*args, **kwargs)
 
     def do_GET(self):
-        """ GET handler function """ 
+        """ GET handler function """
         proxy = self.proxy
         semaphore = proxy.get_Semaphore()
         cache = proxy.get_Cache()
@@ -56,6 +56,11 @@ class GetHandler(BaseHTTPRequestHandler):
                 if value is None:
                     # Did not find the key in cache, look in redis server.
                     value = redis_client.get(key)
+
+                    # if backend redis server is down respond with 503
+                    if redis_client.error == "Connection Error":
+                        self.send_error(
+                            503, "Cannot reach backend redis server")
                     if value != "":
                         # Found a key, add to cache.
                         cache.add(key, value)

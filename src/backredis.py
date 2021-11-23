@@ -19,12 +19,14 @@ class BackendRedis:
             conn.ping()
             self.client = conn
         except ConnectionError as err:
+            self.client = None
             self.error = "Connection Error " + str(err.__str__)
 
     def get(self, key: str) -> int:
         """ Get value associated with key from Redis Backend """
         try:
+            self.error = ""
             key_value = self.client.get(key)
             return key_value
         except BaseException:
-            return ""
+            self.error = "Connection Error"
